@@ -3,8 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
-
-# 🚀 List of coding-related websites with scraping functions
+#You can add here websites according to your choice I have added here only coding related functions
 NEWS_SOURCES = [
     {"name": "InfoQ", "url": "https://www.infoq.com/development/news/", "scraper": "scrape_infoq"},
     {"name": "Hackernoon", "url": "https://hackernoon.com/tagged/programming", "scraper": "scrape_hackernoon"},
@@ -19,6 +18,7 @@ NEWS_SOURCES = [
     {"name": "Smashing Magazine", "url": "https://www.smashingmagazine.com/articles/", "scraper": "scrape_smashingmag"},
     {"name": "The New Stack", "url": "https://thenewstack.io/category/development/", "scraper": "scrape_newstack"}
 ]
+
 
 def fetch_page(url):
     """Fetch HTML content with timeout handling"""
@@ -60,11 +60,9 @@ def scrape_hackernoon():
     for article in soup.select("div.story-card")[:10]:
         title_tag = article.select_one("h2 a")
         img_tag = article.select_one("img")
-
         title = title_tag.text.strip() if title_tag else "No Title"
         link = "https://hackernoon.com" + title_tag["href"] if title_tag else "#"
         image = img_tag["src"] if img_tag else None
-
         news_list.append({"title": title, "url": link, "image": image, "source": "Hackernoon"})
     return news_list
 
@@ -80,14 +78,11 @@ def scrape_medium():
         title_tag = article.select_one("h2")
         link_tag = article.select_one("a")
         img_tag = article.select_one("img")
-
         title = title_tag.text.strip() if title_tag else "No Title"
         link = link_tag["href"] if link_tag else "#"
         image = img_tag["src"] if img_tag else None
-
         if not link.startswith("http"):
             link = "https://medium.com" + link
-
         news_list.append({"title": title, "url": link, "image": image, "source": "Medium"})
     return news_list
 
@@ -102,11 +97,9 @@ def scrape_dzone():
     for article in soup.select("article")[:10]:
         title_tag = article.select_one("h2 a")
         img_tag = article.select_one("img")
-
         title = title_tag.text.strip() if title_tag else "No Title"
         link = title_tag["href"] if title_tag else "#"
         image = img_tag["src"] if img_tag else None
-
         news_list.append({"title": title, "url": link, "image": image, "source": "DZone"})
     return news_list
 
@@ -121,19 +114,14 @@ def scrape_freecodecamp():
     for article in soup.select(".post-card")[:10]:
         title_tag = article.select_one("h2 a")
         img_tag = article.select_one("img")
-
         title = title_tag.text.strip() if title_tag else "No Title"
         link = title_tag["href"] if title_tag else "#"
         image = img_tag["src"] if img_tag else None
-
         news_list.append({"title": title, "url": link, "image": image, "source": "FreeCodeCamp"})
     return news_list
 
-# ✨ Add more scraper functions for new sources in the same format ✨
-
 @app.route("/news", methods=["GET"])
 def get_coding_news():
-    """Fetch and return coding news from multiple sources"""
     all_news = []
     for source in NEWS_SOURCES:
         scraper_function = globals().get(source["scraper"])
@@ -141,6 +129,6 @@ def get_coding_news():
             all_news.extend(scraper_function())
     
     return jsonify(all_news)
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=7860, debug=True)
+    #add Your Preferred port here
+    app.run(host="0.0.0.0", port=xxxx, debug=True)
